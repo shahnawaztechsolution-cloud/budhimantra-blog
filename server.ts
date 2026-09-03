@@ -4,8 +4,12 @@ import { createServer as createViteServer } from "vite";
 import cron from "node-cron";
 import { runAgentTask } from "./src/agent/index.js";
 import apiRoutes from "./src/api/index.js";
+import { initDb } from "./src/db/index.js";
 
 async function startServer() {
+  // Ensure DB tables exist on startup
+  await initDb();
+
   const app = express();
   const PORT = 3000;
 

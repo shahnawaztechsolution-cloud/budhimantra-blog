@@ -121,7 +121,7 @@ export async function runAgentTask() {
     `;
 
     const topicResponse = await generateWithRetry(
-      "gemini-3.1-flash",
+      "gemini-2.5-flash",
       topicPrompt,
       true
     );
@@ -155,7 +155,7 @@ export async function runAgentTask() {
     `;
 
     const articleResponse = await generateWithRetry(
-      "gemini-3.1-flash",
+      "gemini-2.5-flash",
       articlePrompt,
       false
     );
