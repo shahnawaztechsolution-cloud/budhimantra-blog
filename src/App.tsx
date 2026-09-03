@@ -139,7 +139,7 @@ function ArticlePage() {
       
       <div className="prose prose-lg prose-blue max-w-none text-gray-700">
         <div className="markdown-body">
-          <Markdown>{article.content}</Markdown>
+          <Markdown>{article.content.replace(/\\n/g, '\n')}</Markdown>
         </div>
       </div>
     </article>
@@ -299,6 +299,63 @@ function AdminPanel() {
         </div>
 
         <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+          <h2 className="text-xl font-bold mb-6">Write New Article (Manual)</h2>
+          <form className="space-y-4" onSubmit={async (e) => {
+            e.preventDefault();
+            const form = e.target as HTMLFormElement;
+            const formData = new FormData(form);
+            const title = formData.get("title") as string;
+            
+            const slugify = (text: string) => text.toString().toLowerCase().trim().replace(/[\s\W-]+/g, '-').replace(/^-+|-+$/g, '');
+            const slug = slugify(title) + '-' + Math.floor(Math.random()*1000);
+
+            const payload = {
+              title,
+              slug,
+              content: formData.get("content"),
+              category: formData.get("category") || "General",
+              imageUrl: formData.get("imageUrl")
+            };
+
+            const res = await fetch("/api/articles", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}`
+              },
+              body: JSON.stringify(payload)
+            });
+
+            if (res.ok) {
+              alert("Article published successfully!");
+              form.reset();
+            } else {
+              alert("Failed to publish article");
+            }
+          }}>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Title</label>
+              <input name="title" required type="text" className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 outline-none" />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Category</label>
+              <input name="category" required type="text" defaultValue="General" className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 outline-none" />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Image URL (Optional)</label>
+              <input name="imageUrl" type="text" className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 outline-none" />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Content (Markdown supported)</label>
+              <textarea name="content" required rows={6} className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 outline-none"></textarea>
+            </div>
+            <button type="submit" className="bg-green-600 hover:bg-green-700 text-white font-medium py-2.5 px-6 rounded-lg transition-colors">
+              Publish Article
+            </button>
+          </form>
+        </div>
+        
+        <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 md:col-span-2">
           <h2 className="text-xl font-bold mb-6">Agent Activity Logs</h2>
           <div className="overflow-y-auto max-h-[400px] pr-2">
             {logs.length === 0 ? (

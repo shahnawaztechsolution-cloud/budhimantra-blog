@@ -77,6 +77,27 @@ router.post("/settings", authenticate, async (req, res) => {
   }
 });
 
+router.post("/articles", authenticate, async (req, res) => {
+  try {
+    const { title, slug, content, category, imageUrl, seoTitle, seoDescription, keywords } = req.body;
+    await db.insert(articles).values({
+      title,
+      slug,
+      content,
+      category: category || "General",
+      imageUrl,
+      seoTitle,
+      seoDescription,
+      keywords,
+      status: "published",
+    });
+    res.json({ success: true });
+  } catch (error) {
+    console.error("Failed to create article manually:", error);
+    res.status(500).json({ error: "Failed to create article" });
+  }
+});
+
 router.get("/logs", authenticate, async (req, res) => {
   try {
     const allLogs = await db.select().from(logs).orderBy(desc(logs.date)).limit(50);
