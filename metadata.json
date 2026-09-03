@@ -1,0 +1,8 @@
+{
+  "name": "Buddhimantra Gyan",
+  "description": "An automated Hindi blog and knowledge website powered by an autonomous AI agent.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
