@@ -149,7 +149,7 @@ export async function runAgentTask() {
          - Headings के लिए Markdown (##, ###) का इस्तेमाल करो।
       3. **Quality & Value**: Information को copy मत करो। आसान explanation, comparison, context, और practical takeaway जैसी Original Value जोड़ो। AI-generated nonsense या Fake news बिल्कुल न हो।
       4. **SEO & Keywords**: Keyword Stuffing मत करो, लेकिन मुख्य Keyword के साथ-साथ LSI (मिलते-जुलते) Keywords का naturally इस्तेमाल करो ताकि Google Search/Discover में आर्टिकल रैंक करे।
-      5. **Length**: 800–1500 शब्दों का detailed article लिखो। Topic जितना मांगता है उतना ही लिखो।
+      5. **Length**: 1000–2000 शब्दों का बहुत ही detailed और In-depth article लिखो। **CRITICAL**: Article बहुत लंबा होना चाहिए, छोटे summaries या bullet points से काम नहीं चलेगा। हर heading के अंदर कम से कम 2-3 बड़े paragraphs होने चाहिए।
 
       Return ONLY the markdown content of the article. Do not include JSON. Start directly with the # H1 Title.
     `;

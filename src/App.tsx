@@ -100,6 +100,11 @@ function ArticlePage() {
 
   return (
     <article className="max-w-3xl mx-auto px-4 py-12">
+      <Link to="/" className="inline-flex items-center gap-2 text-blue-600 hover:text-blue-800 font-medium mb-8 transition-colors">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+        वापस होम पेज पर जाएँ
+      </Link>
+      
       <div className="mb-8 text-center">
         <span className="text-sm font-semibold text-blue-600 uppercase tracking-wider">{article.category}</span>
         <h1 className="text-3xl md:text-5xl font-bold text-gray-900 mt-4 mb-6 leading-tight">{article.title}</h1>
