@@ -58,7 +58,7 @@ function HomePage() {
       {loading ? (
         <div className="text-center py-20 text-gray-500">Loading articles...</div>
       ) : articles.length === 0 ? (
-        <div className="text-center py-20 text-gray-500">कोई लेख नहीं मिला। AI Agent जल्द ही नया लेख प्रकाशित करेगा।</div>
+        <div className="text-center py-20 text-gray-500">कोई लेख नहीं मिला। जल्द ही नया लेख प्रकाशित किया जाएगा।</div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {articles.map(article => (
