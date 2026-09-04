@@ -17,6 +17,7 @@ export const articles = pgTable("articles", {
   views: integer("views").default(0),
 });
 
+
 export const logs = pgTable("logs", {
   id: serial("id").primaryKey(),
   task: text("task").notNull(), // e.g. "Research", "Write Article", "Publish"

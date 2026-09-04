@@ -34,6 +34,7 @@ function Header() {
 function HomePage() {
   const [articles, setArticles] = useState<Article[]>([]);
   const [loading, setLoading] = useState(true);
+  const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
     fetch("/api/articles")
@@ -48,20 +49,36 @@ function HomePage() {
       });
   }, []);
 
+  const filteredArticles = articles.filter(article => 
+    article.title.toLowerCase().includes(searchQuery.toLowerCase()) || 
+    article.category.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
   return (
     <div className="max-w-6xl mx-auto px-4 py-8">
       <div className="mb-12 text-center">
         <h1 className="text-4xl md:text-5xl font-extrabold text-gray-900 mb-4">हर दिन कुछ नया सीखें</h1>
         <p className="text-xl text-gray-600">विज्ञान, इतिहास, तकनीक और रोचक तथ्यों की दुनिया।</p>
+        
+        <div className="mt-8 max-w-xl mx-auto relative">
+          <input 
+            type="text" 
+            placeholder="आर्टिकल्स खोजें... (जैसे: इतिहास, AI, तकनीक)" 
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="w-full px-5 py-3 pl-12 rounded-full border border-gray-300 focus:ring-2 focus:ring-blue-500 outline-none text-lg shadow-sm"
+          />
+          <svg className="w-6 h-6 text-gray-400 absolute left-4 top-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+        </div>
       </div>
 
       {loading ? (
         <div className="text-center py-20 text-gray-500">Loading articles...</div>
-      ) : articles.length === 0 ? (
-        <div className="text-center py-20 text-gray-500">कोई लेख नहीं मिला। जल्द ही नया लेख प्रकाशित किया जाएगा।</div>
+      ) : filteredArticles.length === 0 ? (
+        <div className="text-center py-20 text-gray-500">कोई लेख नहीं मिला।</div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {articles.map(article => (
+          {filteredArticles.map(article => (
             <Link key={article.id} to={`/article/${article.slug}`} className="group flex flex-col bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-shadow border border-gray-100">
               <div className="aspect-[16/9] w-full overflow-hidden bg-gray-100">
                 {article.imageUrl && <img src={article.imageUrl} alt={article.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />}
@@ -145,6 +162,62 @@ function ArticlePage() {
       <div className="prose prose-lg prose-blue max-w-none text-gray-700">
         <div className="markdown-body">
           <Markdown>{article.content.replace(/\\n/g, '\n')}</Markdown>
+        </div>
+      </div>
+
+      {/* Comments Section */}
+      <div className="mt-16 pt-10 border-t border-gray-200">
+        <h3 className="text-2xl font-bold text-gray-900 mb-6">कमेंट्स (Comments)</h3>
+        
+        <form 
+          className="mb-8 bg-gray-50 p-6 rounded-xl border border-gray-100"
+          onSubmit={(e) => {
+            e.preventDefault();
+            const form = e.target as HTMLFormElement;
+            const name = (form.elements.namedItem('name') as HTMLInputElement).value;
+            const text = (form.elements.namedItem('comment') as HTMLTextAreaElement).value;
+            
+            const newComment = { id: Date.now(), name, text, date: new Date().toLocaleDateString('hi-IN') };
+            const existing = JSON.parse(localStorage.getItem(`comments_${slug}`) || '[]');
+            localStorage.setItem(`comments_${slug}`, JSON.stringify([...existing, newComment]));
+            
+            form.reset();
+            // Force re-render (a bit hacky but works for local storage without extra state)
+            window.location.reload();
+          }}
+        >
+          <div className="mb-4">
+            <label className="block text-sm font-medium text-gray-700 mb-1">आपका नाम</label>
+            <input name="name" required type="text" className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 outline-none" placeholder="अपना नाम लिखें..." />
+          </div>
+          <div className="mb-4">
+            <label className="block text-sm font-medium text-gray-700 mb-1">आपकी राय</label>
+            <textarea name="comment" required rows={3} className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 outline-none" placeholder="इस आर्टिकल के बारे में अपने विचार साझा करें..."></textarea>
+          </div>
+          <button type="submit" className="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-6 rounded-lg transition-colors">
+            कमेंट पोस्ट करें
+          </button>
+        </form>
+
+        <div className="space-y-6">
+          {JSON.parse(localStorage.getItem(`comments_${slug}`) || '[]').length === 0 ? (
+            <p className="text-gray-500">अभी तक कोई कमेंट नहीं है। सबसे पहले कमेंट करने वाले बनें!</p>
+          ) : (
+            JSON.parse(localStorage.getItem(`comments_${slug}`) || '[]').map((c: any) => (
+              <div key={c.id} className="bg-white p-5 rounded-xl border border-gray-100 shadow-sm flex gap-4">
+                <div className="w-10 h-10 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center font-bold text-lg shrink-0">
+                  {c.name.charAt(0).toUpperCase()}
+                </div>
+                <div>
+                  <div className="flex items-center gap-2 mb-1">
+                    <span className="font-bold text-gray-900">{c.name}</span>
+                    <span className="text-xs text-gray-500">{c.date}</span>
+                  </div>
+                  <p className="text-gray-700">{c.text}</p>
+                </div>
+              </div>
+            ))
+          )}
         </div>
       </div>
     </article>

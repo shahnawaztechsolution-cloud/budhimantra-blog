@@ -59,6 +59,8 @@ async function startServer() {
   cron.schedule("0 8,14,20 * * *", async () => {
     console.log("Running scheduled AI agent task (Daytime only)...");
     await runAgentTask();
+  }, {
+    timezone: "Asia/Kolkata"
   });
   
   // Kick off agent loop once on startup (non-blocking)

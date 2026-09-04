@@ -40,6 +40,13 @@ export async function initDb() {
         "views" integer DEFAULT 0
       );
 
+      CREATE TABLE IF NOT EXISTS "comments" (
+        "id" serial PRIMARY KEY NOT NULL,
+        "article_slug" text NOT NULL,
+        "name" text NOT NULL,
+        "content" text NOT NULL,
+        "date" timestamp DEFAULT now()
+      );
       CREATE TABLE IF NOT EXISTS "logs" (
         "id" serial PRIMARY KEY NOT NULL,
         "task" text NOT NULL,

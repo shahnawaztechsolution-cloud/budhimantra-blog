@@ -78,13 +78,13 @@ export async function runAgentTask() {
       .orderBy(desc(articles.publishedDate))
       .limit(1);
     
-    if (lastArticle.length > 0 && lastArticle[0].publishedDate) {
-      const hoursSinceLast = (new Date().getTime() - new Date(lastArticle[0].publishedDate).getTime()) / (1000 * 60 * 60);
-      if (hoursSinceLast < 4) { // Minimum 4 hours gap between articles
-        console.log(`Skipping agent run: Last article was published only ${hoursSinceLast.toFixed(1)} hours ago.`);
-        return;
-      }
-    }
+    // if (lastArticle.length > 0 && lastArticle[0].publishedDate) {
+    //   const hoursSinceLast = (new Date().getTime() - new Date(lastArticle[0].publishedDate).getTime()) / (1000 * 60 * 60);
+    //   if (hoursSinceLast < 4) { // Minimum 4 hours gap between articles
+    //     console.log(`Skipping agent run: Last article was published only ${hoursSinceLast.toFixed(1)} hours ago.`);
+    //     return;
+    //   }
+    // }
 
     await logActivity("Research & Write", null, "started");
 
