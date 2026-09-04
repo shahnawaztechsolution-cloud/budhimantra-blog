@@ -24,6 +24,12 @@ async function startServer() {
     res.send(`User-agent: *\nAllow: /\nSitemap: https://${req.get('host')}/sitemap.xml`);
   });
 
+  // Keep-Alive Ping to prevent Render Sleep Mode
+  cron.schedule("*/5 * * * *", () => {
+    console.log("[Keep-Alive] Pinging server to prevent sleep mode...");
+    fetch("https://ntra-blog.onrender.com/").catch(() => {});
+  });
+
   app.get("/sitemap.xml", async (req, res) => {
     try {
       const { db } = await import("./src/db/index.js");
