@@ -13,7 +13,12 @@ const JWT_SECRET = process.env.JWT_SECRET || "buddhimantra-secret-key-2024";
 // Public Routes
 router.get("/articles", async (req, res) => {
   try {
-    const allArticles = await db.select().from(articles).orderBy(desc(articles.publishedDate));
+    // Only return top 100 for now to prevent freezing the browser
+    const allArticles = await db.select()
+      .from(articles)
+      .orderBy(desc(articles.publishedDate))
+      .limit(100);
+      
     res.json(allArticles);
   } catch (error) {
     res.status(500).json({ error: "Failed to fetch articles" });
