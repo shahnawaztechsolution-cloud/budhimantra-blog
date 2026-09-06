@@ -471,6 +471,8 @@ export default function App() {
             <Route path="/admin" element={<AdminPanel />} />
           </Routes>
         </main>
+        <InstallPwa />
+        <NewsletterPopup />
       </div>
     </Router>
   );
